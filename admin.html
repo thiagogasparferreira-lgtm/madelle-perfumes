@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Madelle Perfumes - Admin</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#111;
+    color:white;
+    padding:20px;
+}
+
+h1{
+    text-align:center;
+}
+
+form{
+    background:#222;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:20px;
+}
+
+input, textarea{
+    width:100%;
+    padding:10px;
+    margin:5px 0;
+    border:none;
+    border-radius:5px;
+}
+
+button{
+    background:#c89b3c;
+    color:white;
+    border:none;
+    padding:10px 15px;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.card{
+    background:#222;
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:10px;
+}
+
+.card img{
+    width:150px;
+    border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Painel Administrativo</h1>
+
+<form id="formPerfume">
+    <input type="text" id="nome" placeholder="Nome do perfume" required>
+
+    <input type="text" id="preco" placeholder="Preço" required>
+
+    <textarea id="descricao" placeholder="Descrição"></textarea>
+
+    <input type="text" id="imagem" placeholder="URL da imagem">
+
+    <button type="submit">Salvar Perfume</button>
+</form>
+
+<div id="lista"></div>
+
+<script>
+
+let perfumes =
+JSON.parse(localStorage.getItem("perfumes")) || [];
+
+function renderizar(){
+
+    const lista =
+    document.getElementById("lista");
+
+    lista.innerHTML = "";
+
+    perfumes.forEach((perfume,index)=>{
+
+        lista.innerHTML += `
+        <div class="card">
+
+            <img src="${perfume.imagem}" alt="">
+
+            <h3>${perfume.nome}</h3>
+
+            <p>${perfume.preco}</p>
+
+            <p>${perfume.descricao}</p>
+
+            <button onclick="excluir(${index})">
+                Excluir
+            </button>
+
+        </div>
+        `;
+    });
+}
+
+function excluir(index){
+
+    perfumes.splice(index,1);
+
+    localStorage.setItem(
+        "perfumes",
+        JSON.stringify(perfumes)
+    );
+
+    renderizar();
+}
+
+document
+.getElementById("formPerfume")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    perfumes.push({
+        nome:
+        document.getElementById("nome").value,
+
+        preco:
+        document.getElementById("preco").value,
+
+        descricao:
+        document.getElementById("descricao").value,
+
+        imagem:
+        document.getElementById("imagem").value
+    });
+
+    localStorage.setItem(
+        "perfumes",
+        JSON.stringify(perfumes)
+    );
+
+    this.reset();
+
+    renderizar();
+});
+
+renderizar();
+
+</script>
+
+</body>
+</html>
