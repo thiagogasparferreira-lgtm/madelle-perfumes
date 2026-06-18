@@ -1,8 +1,10 @@
 body{
     margin:0;
-    font-family:'Montserrat', sans-serif;
-    background: linear-gradient(180deg,#160022,#24003d,#12001d);
+    font-family:'Montserrat',sans-serif;
+    background:
+    radial-gradient(circle at top,#4b0d6b 0%,#24003d 40%,#12001d 100%);
     color:white;
+    min-height:100vh;
 }
 
 header{
@@ -12,77 +14,141 @@ header{
 
 .logo{
     width:180px;
-    max-width:80%;
-    margin-bottom:20px;
+    border-radius:20px;
+    box-shadow:0 0 40px rgba(216,180,255,.25);
+    transition:.4s;
+}
+
+.logo:hover{
+    transform:scale(1.05);
 }
 
 h1{
-    font-family:'Cormorant Garamond', serif;
-    font-size:60px;
-    color:#d8b4ff;
-    margin:10px 0;
+    font-family:'Cormorant Garamond',serif;
+    font-size:72px;
+    color:#e6c9ff;
+    margin:15px 0;
     letter-spacing:2px;
 }
 
 header p{
     color:#d7c4e6;
     font-size:18px;
+    letter-spacing:1px;
 }
 
 #catalogo{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-    gap:30px;
-    padding:40px;
     max-width:1400px;
     margin:auto;
+    padding:40px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:35px;
 }
 
 .card{
-    background:rgba(255,255,255,0.05);
-    border:1px solid rgba(216,180,255,0.2);
-    border-radius:20px;
+    background:rgba(255,255,255,.05);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:24px;
     overflow:hidden;
-    backdrop-filter:blur(10px);
-    transition:0.3s;
-    box-shadow:0 0 20px rgba(0,0,0,0.3);
+    transition:.4s;
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
 }
 
 .card:hover{
-    transform:translateY(-8px);
-    box-shadow:0 10px 30px rgba(216,180,255,0.25);
+    transform:translateY(-10px);
+    box-shadow:
+    0 20px 40px rgba(0,0,0,.4),
+    0 0 30px rgba(216,180,255,.2);
 }
 
 .card img{
     width:100%;
-    height:320px;
+    height:350px;
     object-fit:cover;
+    display:block;
 }
 
 .card-content{
-    padding:20px;
+    padding:22px;
 }
 
 .card h2{
-    font-family:'Cormorant Garamond', serif;
-    color:#f0d8ff;
-    margin-bottom:10px;
+    font-family:'Cormorant Garamond',serif;
+    font-size:34px;
+    margin:0 0 10px;
+    color:#f4dfff;
 }
 
 .preco{
-    color:#d8b4ff;
-    font-size:24px;
+    color:#f1c75b;
+    font-size:30px;
     font-weight:bold;
-    margin-bottom:10px;
+    margin-bottom:12px;
 }
 
 .card p{
-    color:#ddd;
-    line-height:1.5;
+    color:#e5d8ef;
+    line-height:1.6;
+    min-height:60px;
+}
+
+.botao{
+    display:block;
+    text-align:center;
+    text-decoration:none;
+    margin-top:20px;
+    background:linear-gradient(135deg,#f1c75b,#d7a928);
+    color:#1b1025;
+    padding:14px;
+    border-radius:12px;
+    font-weight:700;
+    transition:.3s;
+}
+
+.botao:hover{
+    transform:scale(1.03);
+    box-shadow:0 0 20px rgba(241,199,91,.5);
 }
 
 footer{
     text-align:center;
-    padding:40px;
-    color:#c5b1d6;
+    padding:50px;
+    color:#cab4dc;
+    font-size:14px;
+}
+
+/* Barra elegante */
+
+header::after{
+    content:"";
+    display:block;
+    width:180px;
+    height:2px;
+    margin:25px auto;
+    background:linear-gradient(
+    to right,
+    transparent,
+    #f1c75b,
+    transparent
+    );
+}
+
+/* Responsivo */
+
+@media(max-width:768px){
+
+    h1{
+        font-size:48px;
+    }
+
+    .logo{
+        width:140px;
+    }
+
+    #catalogo{
+        padding:20px;
+    }
+
 }
