@@ -1,47 +1,32 @@
-const whatsapp = "5545998046069";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-const perfumes = [
+import {
+getFirestore,
+collection,
+getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-{
-nome:"Libre YSL",
-preco:"R$ 249,90",
-imagem:"imagens/Libre YSL.jpeg",
-descricao:"Perfume feminino sofisticado e marcante."
-},
+const firebaseConfig = {
+apiKey: "AIzaSyAmAkNlrZURAkHHTbpBlbeuUpBnOQWMGzk",
+authDomain: "madelle-perfumes.firebaseapp.com",
+projectId: "madelle-perfumes"
+};
 
-{
-nome:"Good Girl",
-preco:"R$ 259,90",
-imagem:"imagens/Good Girl.jpeg",
-descricao:"Elegância e sensualidade em um único perfume."
-},
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-{
-nome:"La Vie Est Belle",
-preco:"R$ 249,90",
-imagem:"imagens/La Vie Est Belle.jpeg",
-descricao:"Doce, feminino e inesquecível."
-},
-
-{
-nome:"Sauvage Dior",
-preco:"R$ 279,90",
-imagem:"imagens/Sauvage Dior.jpeg",
-descricao:"Um dos masculinos mais vendidos do mundo."
-},
-
-{
-nome:"Invictus",
-preco:"R$ 239,90",
-imagem:"imagens/Invictus.jpeg",
-descricao:"Fresco, potente e extremamente versátil."
-}
-
-];
+const whatsapp = "5511999999999";
 
 const catalogo = document.getElementById("catalogo");
 
-perfumes.forEach(p => {
+async function carregarPerfumes(){
+
+const snapshot =
+await getDocs(collection(db,"perfumes"));
+
+snapshot.forEach((doc)=>{
+
+const p = doc.data();
 
 catalogo.innerHTML += `
 <div class="card">
@@ -69,3 +54,7 @@ Consultar Disponibilidade
 `;
 
 });
+
+}
+
+carregarPerfumes();
