@@ -1,1 +1,422 @@
 
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Madelle Admin</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#2d0036,#5c007a);
+min-height:100vh;
+padding:20px;
+color:white;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+}
+
+.card{
+background:white;
+color:#333;
+padding:20px;
+border-radius:15px;
+margin-bottom:20px;
+box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+}
+
+input, textarea{
+width:100%;
+padding:12px;
+margin-top:10px;
+border-radius:8px;
+border:1px solid #ddd;
+}
+
+button{
+padding:12px 20px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+margin-top:10px;
+}
+
+.btn-primary{
+background:#7b2cbf;
+color:white;
+}
+
+.btn-primary:hover{
+background:#5a189a;
+}
+
+.btn-danger{
+background:#dc3545;
+color:white;
+}
+
+.btn-edit{
+background:#ffc107;
+color:black;
+}
+
+.hidden{
+display:none;
+}
+
+.perfume{
+display:flex;
+gap:15px;
+align-items:center;
+background:#f8f8f8;
+padding:10px;
+border-radius:10px;
+margin-top:10px;
+color:#333;
+}
+
+.perfume img{
+width:80px;
+height:80px;
+object-fit:cover;
+border-radius:10px;
+}
+
+.actions{
+margin-left:auto;
+display:flex;
+gap:10px;
+}
+
+.logout{
+float:right;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>Painel Administrativo Madelle</h1>
+
+<!-- LOGIN -->
+<div id="loginBox" class="card">
+<h2>Login</h2>
+
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Senha">
+
+<button class="btn-primary" onclick="login()">
+Entrar
+</button>
+</div>
+
+<!-- ADMIN -->
+<div id="adminPanel" class="hidden">
+
+<div class="card">
+<button class="btn-danger logout" onclick="logout()">
+Sair
+</button>
+
+<h2>Adicionar / Editar Perfume</h2>
+
+<input type="text" id="nome" placeholder="Nome">
+
+<input type="number" id="preco" placeholder="Preço">
+
+<input type="text" id="imagem" placeholder="URL da imagem">
+
+<textarea id="descricao" placeholder="Descrição"></textarea>
+
+<button class="btn-primary" onclick="salvarPerfume()">
+Salvar Perfume
+</button>
+
+<input type="hidden" id="perfumeId">
+</div>
+
+<div class="card">
+<h2>Perfumes Cadastrados</h2>
+<div id="listaPerfumes"></div>
+</div>
+
+</div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getAuth,
+signInWithEmailAndPassword,
+signOut,
+onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+getDocs,
+doc,
+updateDoc,
+deleteDoc
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+
+apiKey: "SUA_API_KEY",
+
+authDomain: "SEU_PROJETO.firebaseapp.com",
+
+projectId: "SEU_PROJETO",
+
+storageBucket: "SEU_PROJETO.appspot.com",
+
+messagingSenderId: "XXXX",
+
+appId: "XXXX"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+window.login = async () => {
+
+const email =
+document.getElementById("email").value;
+
+const password =
+document.getElementById("password").value;
+
+try{
+
+await signInWithEmailAndPassword(
+auth,
+email,
+password
+);
+
+alert("Login realizado!");
+
+}catch(error){
+
+alert(error.message);
+
+}
+
+};
+
+window.logout = async () => {
+
+await signOut(auth);
+
+};
+
+onAuthStateChanged(auth,(user)=>{
+
+if(user){
+
+document.getElementById("loginBox")
+.classList.add("hidden");
+
+document.getElementById("adminPanel")
+.classList.remove("hidden");
+
+carregarPerfumes();
+
+}else{
+
+document.getElementById("loginBox")
+.classList.remove("hidden");
+
+document.getElementById("adminPanel")
+.classList.add("hidden");
+
+}
+
+});
+
+async function carregarPerfumes(){
+
+const lista =
+document.getElementById("listaPerfumes");
+
+lista.innerHTML = "";
+
+const querySnapshot =
+await getDocs(collection(db,"perfumes"));
+
+querySnapshot.forEach((docSnap)=>{
+
+const perfume = docSnap.data();
+
+lista.innerHTML += `
+<div class="perfume">
+
+<img src="${perfume.imagem}">
+
+<div>
+<h3>${perfume.nome}</h3>
+<p>R$ ${perfume.preco}</p>
+<p>${perfume.descricao}</p>
+</div>
+
+<div class="actions">
+
+<button class="btn-edit"
+onclick="editarPerfume(
+'${docSnap.id}',
+'${perfume.nome}',
+'${perfume.preco}',
+'${perfume.imagem}',
+\`${perfume.descricao}\`
+)">
+Editar
+</button>
+
+<button class="btn-danger"
+onclick="excluirPerfume('${docSnap.id}')">
+Excluir
+</button>
+
+</div>
+
+</div>
+`;
+
+});
+
+}
+
+window.salvarPerfume = async ()=>{
+
+const id =
+document.getElementById("perfumeId").value;
+
+const nome =
+document.getElementById("nome").value;
+
+const preco =
+document.getElementById("preco").value;
+
+const imagem =
+document.getElementById("imagem").value;
+
+const descricao =
+document.getElementById("descricao").value;
+
+const dados = {
+nome,
+preco,
+imagem,
+descricao
+};
+
+try{
+
+if(id){
+
+await updateDoc(
+doc(db,"perfumes",id),
+dados
+);
+
+alert("Perfume atualizado!");
+
+}else{
+
+await addDoc(
+collection(db,"perfumes"),
+dados
+);
+
+alert("Perfume cadastrado!");
+
+}
+
+limparFormulario();
+
+carregarPerfumes();
+
+}catch(error){
+
+alert(error.message);
+
+}
+
+};
+
+window.editarPerfume = (
+id,
+nome,
+preco,
+imagem,
+descricao
+)=>{
+
+document.getElementById("perfumeId").value=id;
+document.getElementById("nome").value=nome;
+document.getElementById("preco").value=preco;
+document.getElementById("imagem").value=imagem;
+document.getElementById("descricao").value=descricao;
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+};
+
+window.excluirPerfume = async(id)=>{
+
+if(!confirm("Deseja excluir este perfume?"))
+return;
+
+await deleteDoc(doc(db,"perfumes",id));
+
+carregarPerfumes();
+
+};
+
+function limparFormulario(){
+
+document.getElementById("perfumeId").value="";
+document.getElementById("nome").value="";
+document.getElementById("preco").value="";
+document.getElementById("imagem").value="";
+document.getElementById("descricao").value="";
+
+}
+
+</script>
+
+</body>
+</html>
+```
