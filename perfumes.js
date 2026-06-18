@@ -5,35 +5,35 @@ const perfumes = [
 {
 nome:"Libre YSL",
 preco:"R$ 249,90",
-imagem:"imagens/libre.jpg",
+imagem:"imagens/Libre YSL.jpeg",
 descricao:"Perfume feminino sofisticado e marcante."
 },
 
 {
 nome:"Good Girl",
 preco:"R$ 259,90",
-imagem:"imagens/goodgirl.jpg",
+imagem:"imagens/Good Girl.jpeg",
 descricao:"Elegância e sensualidade em um único perfume."
 },
 
 {
 nome:"La Vie Est Belle",
 preco:"R$ 249,90",
-imagem:"imagens/lavie.jpg",
+imagem:"imagens/La Vie Est Belle.jpeg",
 descricao:"Doce, feminino e inesquecível."
 },
 
 {
 nome:"Sauvage Dior",
 preco:"R$ 279,90",
-imagem:"imagens/sauvage.jpg",
+imagem:"imagens/Sauvage Dior.jpeg",
 descricao:"Um dos masculinos mais vendidos do mundo."
 },
 
 {
 nome:"Invictus",
 preco:"R$ 239,90",
-imagem:"imagens/invictus.jpg",
+imagem:"imagens/Invictus.jpeg",
 descricao:"Fresco, potente e extremamente versátil."
 }
 
@@ -46,15 +46,15 @@ perfumes.forEach(p => {
 catalogo.innerHTML += `
 <div class="card">
 
-<img src="${p.imagem}">
+<img src="${p.imagem}" alt="${p.nome}">
 
-<div class="info">
+<div class="card-content">
 
-<div class="nome">${p.nome}</div>
+<h2>${p.nome}</h2>
 
 <div class="preco">${p.preco}</div>
 
-<div class="desc">${p.descricao}</div>
+<p>${p.descricao}</p>
 
 <a
 class="botao"
