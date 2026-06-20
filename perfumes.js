@@ -15,7 +15,7 @@ projectId: "madelle-perfumes"
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const whatsapp = "5511999999999";
+const whatsapp = "5545998046069";
 
 const catalogo = document.getElementById("catalogo");
 const busca = document.getElementById("busca");
