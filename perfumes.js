@@ -38,7 +38,9 @@ catalogo.innerHTML += `
 
 <h2>${p.nome}</h2>
 
-<div class="preco">${p.preco}</div>
+<div class="preco">
+R$ ${Number(p.preco).toFixed(2).replace(".",",")}
+</div>
 
 <p>${p.descricao}</p>
 
