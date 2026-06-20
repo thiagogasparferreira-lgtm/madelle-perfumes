@@ -18,17 +18,18 @@ const db = getFirestore(app);
 const whatsapp = "5511999999999";
 
 const catalogo = document.getElementById("catalogo");
+const busca = document.getElementById("busca");
 
-async function carregarPerfumes(){
+let todosPerfumes = [];
 
-const snapshot =
-await getDocs(collection(db,"perfumes"));
+function renderizarPerfumes(lista){
 
-snapshot.forEach((doc)=>{
+catalogo.innerHTML = "";
 
-const p = doc.data();
+lista.forEach((p)=>{
 
 catalogo.innerHTML += `
+
 <div class="card">
 
 <img src="${p.imagem}" alt="${p.nome}">
@@ -45,8 +46,7 @@ catalogo.innerHTML += `
 class="botao"
 target="_blank"
 href="https://wa.me/${whatsapp}?text=Olá,%20tenho%20interesse%20no%20perfume%20${encodeURIComponent(p.nome)}">
-Consultar Disponibilidade
-</a>
+Consultar Disponibilidade </a>
 
 </div>
 
@@ -56,5 +56,36 @@ Consultar Disponibilidade
 });
 
 }
+
+async function carregarPerfumes(){
+
+const snapshot =
+await getDocs(collection(db,"perfumes"));
+
+todosPerfumes = [];
+
+snapshot.forEach((doc)=>{
+
+todosPerfumes.push(doc.data());
+
+});
+
+renderizarPerfumes(todosPerfumes);
+
+}
+
+busca.addEventListener("input", ()=>{
+
+const termo = busca.value.toLowerCase();
+
+const filtrados = todosPerfumes.filter(p =>
+
+p.nome.toLowerCase().includes(termo)
+
+);
+
+renderizarPerfumes(filtrados);
+
+});
 
 carregarPerfumes();
